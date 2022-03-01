@@ -1,10 +1,13 @@
-const SIGN_IN_WITH_EMAIL = "Sign in with email and password";
+const LOGIN_WITH_EMAIL = "Login with email and password";
 // data: { email, password }
 
-const SIGN_IN_WITH_GOOGLE = "Sign in with google";
+const LOGIN_WITH_GOOGLE = "Login with google";
 // data: None
 
-const SIGN_OUT_USER = "Sign out current user";
+const LOGOUT_USER = "Logout current user";
 // data: None
 
-export { SIGN_IN_WITH_EMAIL, SIGN_IN_WITH_GOOGLE, SIGN_OUT_USER };
+const AUTH_LOGIN_ERROR = "Error occured when trying to Login";
+// data: error
+
+export { LOGIN_WITH_EMAIL, LOGIN_WITH_GOOGLE, LOGOUT_USER, AUTH_LOGIN_ERROR };

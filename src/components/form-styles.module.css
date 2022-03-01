@@ -1,0 +1,38 @@
+.form {
+  background-color: #f8f8ff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  padding: 4rem 2rem;
+  padding-bottom: 2rem;
+  border-radius: 2px;
+  width: 20rem;
+}
+
+.form .submit {
+  align-self: center;
+  width: 150px;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 2px;
+  border-style: none;
+  background-color: #007bff;
+  color: white;
+}
+
+.form .text-input {
+  height: 1.6rem;
+  font-size: 1rem;
+}
+
+.form .label {
+  font-size: 1.2rem;
+}
+
+.form .error {
+  align-self: center;
+  font-size: 1.2rem;
+  height: 1.2rem;
+  color: #dc3545;
+}

@@ -5,37 +5,47 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase-config.js";
-import { subscribe } from "../topic-manager";
+import { publish, subscribe } from "../topic-manager";
 import {
-  SIGN_IN_WITH_EMAIL,
-  SIGN_IN_WITH_GOOGLE,
-  SIGN_OUT_USER,
+  AUTH_LOGIN_ERROR,
+  LOGIN_WITH_EMAIL,
+  LOGIN_WITH_GOOGLE,
+  LOGOUT_USER,
 } from "./topics";
 
-async function handleEmailSignIn(topic, { email, password }) {
+async function handleEmailLogin(topic, { email, password }) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (e) {
     console.log(e);
+    if (e.code === "auth/user-not-found") {
+      publish(AUTH_LOGIN_ERROR, {
+        error: "User not found",
+      });
+    } else if (e.code === "auth/wrong-password") {
+      publish(AUTH_LOGIN_ERROR, {
+        error: "Incorrect password",
+      });
+    }
   }
 }
-subscribe(SIGN_IN_WITH_EMAIL, handleEmailSignIn);
+subscribe(LOGIN_WITH_EMAIL, handleEmailLogin);
 
 const googleProvider = new GoogleAuthProvider();
-async function handleGoogleSignIn(topic) {
+async function handleGoogleLogin(topic) {
   try {
     await signInWithPopup(auth, googleProvider);
   } catch (e) {
     console.log(e);
   }
 }
-subscribe(SIGN_IN_WITH_GOOGLE, handleGoogleSignIn);
+subscribe(LOGIN_WITH_GOOGLE, handleGoogleLogin);
 
-async function handleSignOut(topic) {
+async function handleLogout(topic) {
   try {
     await signOut(auth);
   } catch (e) {
     console.log(e);
   }
 }
-subscribe(SIGN_OUT_USER, handleSignOut);
+subscribe(LOGOUT_USER, handleLogout);

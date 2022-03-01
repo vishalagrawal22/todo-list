@@ -1,35 +1,63 @@
-import { SIGN_IN_WITH_GOOGLE, SIGN_OUT_USER } from "../../auth/topics";
-import { useCurrentUser } from "../../auth/hooks";
+import { useEffect, useState } from "react";
 import { publish } from "../../topic-manager";
+
+import { useCurrentUser } from "../../auth/hooks";
+import { LOGOUT_USER } from "../../auth/topics";
+
+import Overlay from "../Overlay";
+import LoginForm from "../LoginForm";
 
 function Header() {
   const user = useCurrentUser();
-  return (
-    <div>
-      {user ? (
-        <div>
-          <div>{user.displayName || user.email}</div>
-          <button
-            onClick={() => {
-              publish(SIGN_OUT_USER);
-            }}
-          >
-            Sign Out
-          </button>
-        </div>
-      ) : (
-        <div>
-          <button
-            onClick={() => {
-              publish(SIGN_IN_WITH_GOOGLE);
-            }}
-          >
-            Sign In
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  const [formType, setFormType] = useState(null);
+
+  function removeFormFromDisplay() {
+    setFormType(null);
+  }
+
+  function addLoginFormToDisplay() {
+    setFormType("login");
+  }
+
+  function addSignUpFormToDisplay() {
+    setFormType("signup");
+  }
+
+  useEffect(() => {
+    if (user !== null) {
+      removeFormFromDisplay();
+    }
+  }, [user]);
+
+  if (formType === null) {
+    return (
+      <div>
+        {user ? (
+          <div>
+            <div>{user.displayName || user.email}</div>
+            <button
+              onClick={() => {
+                publish(LOGOUT_USER);
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          <div>
+            <button onClick={addLoginFormToDisplay}>Login</button>
+            <button onClick={addSignUpFormToDisplay}>Sign Up</button>
+          </div>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <Overlay removeFormFromDisplay={removeFormFromDisplay}>
+        {formType === "login" ? <LoginForm /> : null}
+      </Overlay>
+    );
+  }
 }
 
 export default Header;
