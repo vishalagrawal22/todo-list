@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import googleAuthStyles from "../google-auth-styles.module.css";
 import formStyles from "../form-styles.module.css";
-import { subscribe, unsubscribe } from "../../topic-manager";
+import { publish, subscribe, unsubscribe } from "../../topic-manager";
 import {
   AUTH_LOGIN_ERROR,
   LOGIN_WITH_EMAIL,
   LOGIN_WITH_GOOGLE,
 } from "../../auth/topics";
-import { publish } from "../../topic-manager";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
