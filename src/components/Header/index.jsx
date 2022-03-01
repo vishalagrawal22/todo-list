@@ -6,6 +6,7 @@ import { LOGOUT_USER } from "../../auth/topics";
 
 import Overlay from "../Overlay";
 import LoginForm from "../LoginForm";
+import SignupForm from "../SignupForm";
 
 function Header() {
   const user = useCurrentUser();
@@ -54,7 +55,7 @@ function Header() {
   } else {
     return (
       <Overlay removeFormFromDisplay={removeFormFromDisplay}>
-        {formType === "login" ? <LoginForm /> : null}
+        {formType === "login" ? <LoginForm /> : <SignupForm />}
       </Overlay>
     );
   }

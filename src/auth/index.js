@@ -3,14 +3,18 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase-config.js";
 import { publish, subscribe } from "../topic-manager";
 import {
   AUTH_LOGIN_ERROR,
+  AUTH_SIGNUP_ERROR,
   LOGIN_WITH_EMAIL,
   LOGIN_WITH_GOOGLE,
   LOGOUT_USER,
+  SIGNUP_WITH_EMAIL,
+  SIGNUP_WITH_GOOGLE,
 } from "./topics";
 
 async function handleEmailLogin(topic, { email, password }) {
@@ -49,3 +53,47 @@ async function handleLogout(topic) {
   }
 }
 subscribe(LOGOUT_USER, handleLogout);
+
+async function handleGoogleSignup(topic) {
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (e) {
+    console.log(e);
+    if (e.code === "account-exists-with-different-credential") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Account already exist",
+      });
+    } else if (e.code === "auth/email-already-in-use") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Email already taken",
+      });
+    } else if (e.code === "auth/invalid-email") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Invalid email",
+      });
+    }
+  }
+}
+subscribe(SIGNUP_WITH_GOOGLE, handleGoogleSignup);
+
+async function handleEmailSignup(topic, { email, password }) {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    console.log(e);
+    if (e.code === "account-exists-with-different-credential") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Account already exist",
+      });
+    } else if (e.code === "auth/email-already-in-use") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Email already taken",
+      });
+    } else if (e.code === "auth/invalid-email") {
+      publish(AUTH_SIGNUP_ERROR, {
+        error: "Invalid email",
+      });
+    }
+  }
+}
+subscribe(SIGNUP_WITH_EMAIL, handleEmailSignup);
