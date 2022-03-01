@@ -8,6 +8,10 @@ import Overlay from "../Overlay";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
 
+import notepadImage from "../../images/notepad.svg";
+import defaultProfileImage from "../../images/default-profile-image.svg";
+import styles from "./styles.module.css";
+
 function Header() {
   const user = useCurrentUser();
   const [formType, setFormType] = useState(null);
@@ -32,11 +36,23 @@ function Header() {
 
   if (formType === null) {
     return (
-      <div>
+      <header className={styles["header"]}>
+        <div className={styles["info"]}>
+          <img className={styles["logo"]} src={notepadImage} alt="notepad" />
+          <div className={styles["app-name"]}>Todo List</div>
+        </div>
         {user ? (
-          <div>
-            <div>{user.displayName || user.email}</div>
+          <div className={styles["right"]}>
+            <img
+              className={styles["profile-pic"]}
+              src={user.photoURL || defaultProfileImage}
+              alt="profile pic"
+            />
+            <div className={styles["user-name"]}>
+              {user.displayName || user.email}
+            </div>
             <button
+              className={styles["btn"]}
               onClick={() => {
                 publish(LOGOUT_USER);
               }}
@@ -45,12 +61,16 @@ function Header() {
             </button>
           </div>
         ) : (
-          <div>
-            <button onClick={addLoginFormToDisplay}>Login</button>
-            <button onClick={addSignUpFormToDisplay}>Sign Up</button>
+          <div className={styles["right"]}>
+            <button className={styles["btn"]} onClick={addLoginFormToDisplay}>
+              Login
+            </button>
+            <button className={styles["btn"]} onClick={addSignUpFormToDisplay}>
+              Sign Up
+            </button>
           </div>
         )}
-      </div>
+      </header>
     );
   } else {
     return (

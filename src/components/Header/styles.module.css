@@ -1,0 +1,44 @@
+.header {
+  height: 100px;
+  padding: 8px 16px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header .info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header .logo {
+  height: 80px;
+  width: auto;
+}
+
+.header .btn {
+  padding: 0.5rem 1rem;
+}
+
+.header .right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header .profile-pic {
+  border-radius: 50%;
+  height: 50px;
+}
+
+.header .user-name {
+  font-size: 1.2rem;
+}
+
+.header .app-name {
+  font-weight: 700;
+  font-size: 2rem;
+}
