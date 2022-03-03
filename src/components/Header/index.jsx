@@ -8,8 +8,8 @@ import Overlay from "../Overlay";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
 
-import notepadImage from "../../images/notepad.svg";
-import defaultProfileImage from "../../images/default-profile-image.svg";
+import notepadImage from "./images/notepad.svg";
+import defaultProfileImage from "./images/default-profile-image.svg";
 import styles from "./styles.module.css";
 
 function Header() {
