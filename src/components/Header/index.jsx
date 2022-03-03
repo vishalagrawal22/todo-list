@@ -29,7 +29,7 @@ function Header() {
   }
 
   useEffect(() => {
-    if (user !== null) {
+    if (user !== null && !user.isAnonymous) {
       removeFormFromDisplay();
     }
   }, [user]);
@@ -41,7 +41,7 @@ function Header() {
           <img className={styles["logo"]} src={notepadImage} alt="notepad" />
           <div className={styles["app-name"]}>Todo List</div>
         </div>
-        {user ? (
+        {user !== null && !user.isAnonymous ? (
           <div className={styles["right"]}>
             <img
               className={styles["profile-pic"]}
