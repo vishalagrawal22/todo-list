@@ -1,0 +1,35 @@
+.project-section {
+  flex: 0 0 auto;
+  width: 250px;
+  border: 1px solid black;
+  padding: 1rem;
+}
+
+.project-item {
+  list-style-image: url("./images/folder.svg");
+}
+
+.project-section-heading {
+  margin-bottom: 8px;
+}
+
+.add-project-button {
+  background-color: #07c07c;
+  border-radius: 5px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  padding: 12px 24px;
+  border-style: none;
+  color: white;
+}
+
+.project-name {
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.project-actions {
+  display: flex;
+  gap: 8px;
+}

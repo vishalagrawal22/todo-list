@@ -1,11 +1,15 @@
 import Header from "./components/Header";
+import ProjectDisplay from "./components/ProjectDisplay";
 import "./App.css";
 
 function App() {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+      <main>
+        <ProjectDisplay />
+      </main>
+    </>
   );
 }
 
