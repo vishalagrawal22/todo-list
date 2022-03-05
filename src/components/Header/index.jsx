@@ -34,8 +34,13 @@ function Header() {
     }
   }, [user]);
 
-  if (formType === null) {
-    return (
+  return (
+    <>
+      {formType !== null ? (
+        <Overlay removeFormFromDisplay={removeFormFromDisplay}>
+          {formType === "login" ? <LoginForm /> : <SignupForm />}
+        </Overlay>
+      ) : null}
       <header className={styles["header"]}>
         <div className={styles["info"]}>
           <img className={styles["logo"]} src={notepadImage} alt="notepad" />
@@ -71,14 +76,8 @@ function Header() {
           </div>
         )}
       </header>
-    );
-  } else {
-    return (
-      <Overlay removeFormFromDisplay={removeFormFromDisplay}>
-        {formType === "login" ? <LoginForm /> : <SignupForm />}
-      </Overlay>
-    );
-  }
+    </>
+  );
 }
 
 export default Header;
