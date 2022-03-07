@@ -4,7 +4,7 @@ import { db } from "../firebase-config";
 import { ProjectFactory } from "./data-factory";
 
 function useProjects(user) {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState({});
   useEffect(() => {
     if (user !== null) {
       const projectCollectionRef = collection(
@@ -18,7 +18,11 @@ function useProjects(user) {
         const projects = snapshot.docs.map((doc) => {
           return ProjectFactory(doc.id, doc.data().name, doc.data().isDefault);
         });
-        setProjects(projects);
+        const projectsObject = {};
+        projects.forEach((project) => {
+          projectsObject[project.id] = project;
+        });
+        setProjects(projectsObject);
       });
       return unsubscribe;
     }
