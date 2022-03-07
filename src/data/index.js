@@ -43,13 +43,7 @@ subscribe(ADD_PROJECT, handleAddProject);
 
 async function handleEditProject(topic, { user, project }) {
   try {
-    const projectDocRef = collection(
-      db,
-      "users",
-      user.id,
-      "projects",
-      project.id
-    );
+    const projectDocRef = doc(db, "users", user.uid, "projects", project.id);
     await setDoc(projectDocRef, project.data);
   } catch (e) {
     console.log(e);
@@ -69,12 +63,12 @@ async function handleDeleteProject(topic, { user, project }) {
     );
     const todoQuery = query(todoCollectionRef);
     const todoSnap = await getDocs(todoQuery);
-    const todoDeletePromises = todoSnap.data().map((todo) => {
+    const todoDeletePromises = todoSnap.docs.map((todo) => {
       return deleteDoc(doc(todoCollectionRef, todo.id));
     });
     await Promise.all(todoDeletePromises);
 
-    const projectDocRef = doc(db, "users", user.id, "projects", project.id);
+    const projectDocRef = doc(db, "users", user.uid, "projects", project.id);
     await deleteDoc(projectDocRef);
 
     await decreaseProjectCount(user);
