@@ -6,7 +6,8 @@ import styles from "./styles.module.css";
 import ProjectForm from "../ProjectForm";
 
 import { useCallback, useState } from "react";
-import { ProjectFactory } from "../../data/data-factory";
+import { useProjects } from "../../data/hooks";
+import { useCurrentUser } from "../../auth/hooks";
 
 function FormDataFactory(mode, oldProject = null) {
   return { mode, oldProject };
@@ -14,11 +15,8 @@ function FormDataFactory(mode, oldProject = null) {
 
 function ProjectDisplay() {
   const [formData, setFormData] = useState({});
-  const projects = {
-    1: ProjectFactory(1, "abc", true),
-    2: ProjectFactory(2, "xyz"),
-    3: ProjectFactory(3, "project"),
-  };
+  const user = useCurrentUser();
+  const projects = useProjects(user);
 
   function addNewProjectFormToDisplay() {
     setFormData(FormDataFactory("add"));
