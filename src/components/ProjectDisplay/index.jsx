@@ -2,84 +2,53 @@ import deleteIconImage from "./images/delete.svg";
 import editIconImage from "./images/edit.svg";
 
 import styles from "./styles.module.css";
-import formStyles from "../form-styles.module.css";
 
-import Overlay from "../Overlay";
+import ProjectForm from "../ProjectForm";
 
-import { useEffect, useState } from "react";
-
-import {
-  ADD_PROJECT,
-  DB_ADD_PROJECT_ERROR,
-  DB_ADD_PROJECT_SUCCESS,
-} from "../../data/topics";
-import { publish, unsubscribe, subscribe } from "../../topic-manager";
-import { useCurrentUser } from "../../auth/hooks";
+import { useCallback, useState } from "react";
 import { ProjectFactory } from "../../data/data-factory";
 
+function FormDataFactory(mode, oldProject = null) {
+  return { mode, oldProject };
+}
+
 function ProjectDisplay() {
-  const user = useCurrentUser();
-  const [name, setName] = useState("");
-  const [isFormActive, setIsFormActive] = useState(false);
-  const [error, setError] = useState("");
-  function addFormToDisplay() {
-    setIsFormActive(true);
+  const [formData, setFormData] = useState({});
+  const projects = {
+    1: ProjectFactory(1, "abc", true),
+    2: ProjectFactory(2, "xyz"),
+    3: ProjectFactory(3, "project"),
+  };
+
+  function addNewProjectFormToDisplay() {
+    setFormData(FormDataFactory("add"));
   }
 
-  function removeFormFromDisplay() {
-    setName("");
-    setIsFormActive(false);
+  function addEditProjectFormToDisplay(id) {
+    setFormData(FormDataFactory("edit", projects[id]));
   }
 
-  function addProject(event) {
-    event.preventDefault();
-    const project = ProjectFactory(name);
-    publish(ADD_PROJECT, { user, project });
+  function deleteProject(id) {
+    setFormData(FormDataFactory("delete", projects[id]));
   }
 
-  useEffect(() => {
-    const token = subscribe(DB_ADD_PROJECT_ERROR, ({ error }) => {
-      setError(error);
-    });
-    return () => unsubscribe(token);
+  const removeFormFromDisplay = useCallback(() => {
+    setFormData({});
   }, []);
 
-  useEffect(() => {
-    const token = subscribe(DB_ADD_PROJECT_SUCCESS, removeFormFromDisplay);
-    return () => unsubscribe(token);
-  }, []);
-
-  if (isFormActive) {
-    return (
-      <Overlay removeFormFromDisplay={removeFormFromDisplay}>
-        <form className={formStyles["form"]} onSubmit={addProject}>
-          <label htmlFor="project-name" className={formStyles["label"]}>
-            Project Name:
-          </label>
-          <input
-            className={formStyles["text-input"]}
-            type="text"
-            id="project-name"
-            name="project-name"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-            }}
-            size="46"
-            required
-          />
-          <button className={formStyles["submit"]}>Submit</button>
-          <span className={formStyles["error"]}>{error}</span>
-        </form>
-      </Overlay>
-    );
-  } else {
-    return (
+  return (
+    <>
+      {Object.keys(formData).length !== 0 ? (
+        <ProjectForm
+          removeFormFromDisplay={removeFormFromDisplay}
+          {...formData}
+        />
+      ) : null}
       <nav className={styles["project-section"]}>
         <h2 className={styles["project-section-heading"]}>Projects</h2>
         <button
           className={styles["add-project-button"]}
-          onClick={addFormToDisplay}
+          onClick={addNewProjectFormToDisplay}
         >
           Add Project
         </button>
@@ -89,20 +58,37 @@ function ProjectDisplay() {
               <h3 className={styles["project-name"]}>all</h3>
             </article>
           </li>
-
-          <li key="project-1" className={styles["project-item"]}>
-            <article>
-              <h3 className={styles["project-name"]}>Project 1</h3>
-              <div className={styles["project-actions"]}>
-                <img src={editIconImage} alt="edit-button" />
-                <img src={deleteIconImage} alt="delete-button" />
-              </div>
-            </article>
-          </li>
+          {Object.keys(projects).map((id) => {
+            return (
+              <li key={id} className={styles["project-item"]}>
+                <article>
+                  <h3 className={styles["project-name"]}>
+                    {projects[id].data.name}
+                  </h3>
+                  <div className={styles["project-actions"]}>
+                    <img
+                      src={editIconImage}
+                      alt="edit-button"
+                      onClick={() => {
+                        addEditProjectFormToDisplay(id);
+                      }}
+                    />
+                    <img
+                      src={deleteIconImage}
+                      alt="delete-button"
+                      onClick={() => {
+                        deleteProject(id);
+                      }}
+                    />
+                  </div>
+                </article>
+              </li>
+            );
+          })}
         </ul>
       </nav>
-    );
-  }
+    </>
+  );
 }
 
 export default ProjectDisplay;
