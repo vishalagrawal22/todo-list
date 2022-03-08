@@ -30,6 +30,17 @@
 }
 
 .project-actions {
+  padding: 0rem 0.5rem;
   display: flex;
   gap: 8px;
+}
+
+.project-name span {
+  border-radius: 10px;
+  padding: 0.5rem 0.5rem;
+}
+
+.selected {
+  background-color: rgb(89, 132, 250);
+  color: white;
 }

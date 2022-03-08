@@ -1,0 +1,98 @@
+.display-area {
+  flex: 1 1 0;
+  border: 1px solid black;
+  padding-right: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.todos-section {
+  padding: 16px;
+  padding-right: 0px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 16px;
+  align-content: flex-start;
+}
+
+.todo-item {
+  border: 1px solid black;
+  width: 350px;
+  height: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.todo-data {
+  display: flex;
+  gap: 16px;
+}
+
+.todo-info {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.todo-data-type {
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.todo-data-value {
+  flex: 1 1 auto;
+  word-break: break-all;
+}
+
+.toggle-completed-status-button {
+  padding: 8px 16px;
+  display: block;
+  margin: auto;
+}
+
+.float-button {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 1;
+}
+
+.float-button img {
+  height: 50px;
+  width: 50px;
+}
+
+.priority-1 {
+  background-color: #f07b5e;
+}
+
+.priority-2 {
+  background-color: #f4a261;
+}
+
+.priority-3 {
+  background-color: #e9c46a;
+}
+
+.priority-4 {
+  background-color: #3bd6c4;
+}
+
+.priority-options .option {
+  display: block;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 8px 0px;
+}

@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  collectionGroup,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase-config";
-import { ProjectFactory } from "./data-factory";
+import { ProjectFactory, TodoFactory } from "./data-factory";
 
-function useProjects(user) {
+export function useProjects(user) {
   const [projects, setProjects] = useState({});
   useEffect(() => {
     if (user !== null) {
@@ -30,4 +37,60 @@ function useProjects(user) {
   return projects;
 }
 
-export { useProjects };
+export function useTodos(user, fetchAll, parentProjectId) {
+  const [todos, setTodos] = useState({});
+  useEffect(() => {
+    if (user !== null) {
+      let todoCollectionRef = null;
+      if (fetchAll) {
+        todoCollectionRef = collectionGroup(db, "todos");
+      } else {
+        todoCollectionRef = collection(
+          db,
+          "users",
+          user.uid,
+          "projects",
+          parentProjectId,
+          "todos"
+        );
+      }
+
+      const todoQuery = query(
+        todoCollectionRef,
+        where("userId", "==", user.uid),
+        orderBy("isCompleted"),
+        orderBy("priority")
+      );
+
+      const unsubscribe = onSnapshot(todoQuery, (snapshot) => {
+        const todos = snapshot.docs.map((doc) => {
+          const {
+            parentProjectId,
+            title,
+            description,
+            deadline,
+            isCompleted,
+            priority,
+          } = doc.data();
+          return TodoFactory(
+            doc.id,
+            parentProjectId,
+            title,
+            description,
+            deadline,
+            priority,
+            isCompleted
+          );
+        });
+
+        const todosObject = {};
+        todos.forEach((todo) => {
+          todosObject[todo.id] = todo;
+        });
+        setTodos(todosObject);
+      });
+      return unsubscribe;
+    }
+  }, [user, fetchAll, parentProjectId]);
+  return todos;
+}

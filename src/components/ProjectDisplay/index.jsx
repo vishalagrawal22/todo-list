@@ -13,10 +13,16 @@ function FormDataFactory(mode, oldProject = null) {
   return { mode, oldProject };
 }
 
-function ProjectDisplay() {
+function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
   const [formData, setFormData] = useState({});
   const user = useCurrentUser();
   const projects = useProjects(user);
+
+  function handleSelectedProject(id) {
+    if (selectedProjectId === id) {
+      setSelectedProjectId("all");
+    }
+  }
 
   function addNewProjectFormToDisplay() {
     setFormData(FormDataFactory("add"));
@@ -27,6 +33,7 @@ function ProjectDisplay() {
   }
 
   function deleteProject(id) {
+    handleSelectedProject(id);
     setFormData(FormDataFactory("delete", projects[id]));
   }
 
@@ -53,15 +60,39 @@ function ProjectDisplay() {
         <ul>
           <li className={styles["project-item"]}>
             <article>
-              <h3 className={styles["project-name"]}>all</h3>
+              <h3
+                className={styles["project-name"]}
+                onClick={() => {
+                  setSelectedProjectId("all");
+                }}
+              >
+                <span
+                  className={
+                    selectedProjectId === "all" ? styles["selected"] : ""
+                  }
+                >
+                  all
+                </span>
+              </h3>
             </article>
           </li>
           {Object.keys(projects).map((id) => {
             return (
               <li key={id} className={styles["project-item"]}>
                 <article>
-                  <h3 className={styles["project-name"]}>
-                    {projects[id].data.name}
+                  <h3
+                    className={styles["project-name"]}
+                    onClick={() => {
+                      setSelectedProjectId(id);
+                    }}
+                  >
+                    <span
+                      className={
+                        selectedProjectId === id ? styles["selected"] : ""
+                      }
+                    >
+                      {projects[id].data.name}
+                    </span>
                   </h3>
                   <div className={styles["project-actions"]}>
                     <img

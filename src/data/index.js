@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { subscribe } from "../topic-manager";
-import { ADD_PROJECT, DELETE_PROJECT, EDIT_PROJECT } from "./topics";
+import { ADD_PROJECT, DELETE_PROJECT, EDIT_PROJECT, ADD_TODO } from "./topics";
 
 async function handleAddProject(topic, { user, project }) {
   try {
@@ -55,3 +55,21 @@ async function handleDeleteProject(topic, { user, project }) {
   }
 }
 subscribe(DELETE_PROJECT, handleDeleteProject);
+
+async function handleAddTodo(topic, { user, todo }) {
+  try {
+    const todoCollectionRef = collection(
+      db,
+      "users",
+      user.uid,
+      "projects",
+      todo.data.parentProjectId,
+      "todos"
+    );
+    // saving user uid in todo for collection group query
+    await addDoc(todoCollectionRef, { userId: user.uid, ...todo.data });
+  } catch (e) {
+    console.log(e);
+  }
+}
+subscribe(ADD_TODO, handleAddTodo);
