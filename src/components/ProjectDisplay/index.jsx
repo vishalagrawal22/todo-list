@@ -33,7 +33,6 @@ function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
   }
 
   function deleteProject(id) {
-    handleSelectedProject(id);
     setFormData(FormDataFactory("delete", projects[id]));
   }
 
@@ -46,6 +45,7 @@ function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
       {Object.keys(formData).length !== 0 ? (
         <ProjectForm
           removeFormFromDisplay={removeFormFromDisplay}
+          handleSelectedProject={handleSelectedProject}
           {...formData}
         />
       ) : null}

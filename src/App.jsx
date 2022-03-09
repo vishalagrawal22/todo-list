@@ -2,12 +2,19 @@ import Header from "./components/Header";
 import ProjectDisplay from "./components/ProjectDisplay";
 import TodoDisplay from "./components/TodoDisplay";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
+import { useCurrentUser } from "./auth/hooks";
 
 function App() {
+  const user = useCurrentUser();
   const [selectedProjectId, setSelectedProjectId] = useState("all");
+
+  useEffect(() => {
+    setSelectedProjectId("all");
+  }, [user]);
+
   return (
     <>
       <Header />

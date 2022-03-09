@@ -10,7 +10,12 @@ import { publish } from "../../topic-manager";
 import { useCurrentUser } from "../../auth/hooks";
 import { ProjectFactory } from "../../data/data-factory";
 
-function ProjectForm({ removeFormFromDisplay, mode, oldProject }) {
+function ProjectForm({
+  removeFormFromDisplay,
+  handleSelectedProject,
+  mode,
+  oldProject,
+}) {
   const user = useCurrentUser();
   const [name, setName] = useState("");
 
@@ -30,6 +35,7 @@ function ProjectForm({ removeFormFromDisplay, mode, oldProject }) {
       const { isDefault } = data;
       project = ProjectFactory(id, name, isDefault);
       topic = DELETE_PROJECT;
+      handleSelectedProject(id);
     }
     publish(topic, { user, project });
     removeFormFromDisplay();

@@ -32,6 +32,8 @@ export function useProjects(user) {
         setProjects(projectsObject);
       });
       return unsubscribe;
+    } else {
+      setProjects({});
     }
   }, [user]);
   return projects;
@@ -90,6 +92,8 @@ export function useTodos(user, fetchAll, parentProjectId) {
         setTodos(todosObject);
       });
       return unsubscribe;
+    } else {
+      setTodos({});
     }
   }, [user, fetchAll, parentProjectId]);
   return todos;
