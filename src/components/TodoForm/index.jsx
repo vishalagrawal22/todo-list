@@ -10,6 +10,7 @@ import { publish } from "../../topic-manager";
 import { ADD_TODO } from "../../data/topics";
 import { useCurrentUser } from "../../auth/hooks";
 import { TodoFactory } from "../../data/data-factory";
+import { getDefaultProject } from "../../data/helper";
 
 function TodoForm({ removeFormFromDisplay, mode, oldTodo, parentProjectId }) {
   const user = useCurrentUser();
@@ -31,14 +32,18 @@ function TodoForm({ removeFormFromDisplay, mode, oldTodo, parentProjectId }) {
     return formData.priority === value;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (mode === "add") {
+      let id = parentProjectId;
+      if (id === "all") {
+        id = await getDefaultProject(user);
+      }
       publish(ADD_TODO, {
         user,
         todo: TodoFactory(
           null,
-          parentProjectId,
+          id,
           formData.title,
           formData.description,
           formData.deadline,
