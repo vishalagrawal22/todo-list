@@ -12,3 +12,6 @@ export const ADD_TODO = "Add todo to database";
 
 export const EDIT_TODO = "Edit todo in database";
 // data: { user, todo }
+
+export const DELETE_TODO = "Delete todo from database";
+// data: { user, todo }

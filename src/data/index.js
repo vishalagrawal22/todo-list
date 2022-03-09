@@ -15,6 +15,7 @@ import {
   EDIT_PROJECT,
   ADD_TODO,
   EDIT_TODO,
+  DELETE_TODO,
 } from "./topics";
 
 async function handleAddProject(topic, { user, project }) {
@@ -97,3 +98,21 @@ async function handleEditTodo(topic, { user, todo }) {
   }
 }
 subscribe(EDIT_TODO, handleEditTodo);
+
+async function handleDeleteTodo(topic, { user, todo }) {
+  try {
+    const todoDocRef = doc(
+      db,
+      "users",
+      user.uid,
+      "projects",
+      todo.data.parentProjectId,
+      "todos",
+      todo.id
+    );
+    await deleteDoc(todoDocRef);
+  } catch (e) {
+    console.log(e);
+  }
+}
+subscribe(DELETE_TODO, handleDeleteTodo);

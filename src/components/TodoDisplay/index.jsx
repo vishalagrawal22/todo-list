@@ -9,13 +9,18 @@ import { useCurrentUser } from "../../auth/hooks";
 import { useTodos } from "../../data/hooks";
 import TodoForm from "../TodoForm";
 import { publish } from "../../topic-manager";
-import { EDIT_TODO } from "../../data/topics";
+import { DELETE_TODO, EDIT_TODO } from "../../data/topics";
 
 function FormDataFactory(mode, oldTodo = null) {
   return { mode, oldTodo };
 }
 
-function TodoItem({ todo, addEditTodoFormToDisplay, toggleCompletedStatus }) {
+function TodoItem({
+  todo,
+  addEditTodoFormToDisplay,
+  toggleCompletedStatus,
+  deleteTodo,
+}) {
   return (
     <article
       className={
@@ -37,6 +42,7 @@ function TodoItem({ todo, addEditTodoFormToDisplay, toggleCompletedStatus }) {
           className={styles["delete-button"]}
           src={deleteIconImage}
           alt="delete button"
+          onClick={() => deleteTodo(todo.id)}
         />
       </div>
       <div className={styles["todo-info"]}>
@@ -106,6 +112,14 @@ function TodoDisplay({ parentProjectId }) {
     });
   }
 
+  function deleteTodo(id) {
+    const todo = todos[id];
+    publish(DELETE_TODO, {
+      user,
+      todo,
+    });
+  }
+
   return (
     <>
       {formData?.mode ? (
@@ -125,6 +139,7 @@ function TodoDisplay({ parentProjectId }) {
                 key={todoKey}
                 addEditTodoFormToDisplay={addEditTodoFormToDisplay}
                 toggleCompletedStatus={toggleCompletedStatus}
+                deleteTodo={deleteTodo}
               />
             );
           })}
