@@ -8,16 +8,22 @@ import styles from "./styles.module.css";
 import { useCurrentUser } from "../../auth/hooks";
 import { useTodos } from "../../data/hooks";
 import TodoForm from "../TodoForm";
+import { publish } from "../../topic-manager";
+import { EDIT_TODO } from "../../data/topics";
 
 function FormDataFactory(mode, oldTodo = null) {
   return { mode, oldTodo };
 }
 
-function TodoItem({ todo }) {
+function TodoItem({ todo, addEditTodoFormToDisplay, toggleCompletedStatus }) {
   return (
     <article
       className={
-        styles["todo-item"] + " " + styles[`priority-${todo.data.priority}`]
+        styles["todo-item"] +
+        " " +
+        styles[`priority-${todo.data.priority}`] +
+        " " +
+        (todo.data.isCompleted ? styles[`completed`] : "")
       }
     >
       <div className={styles["todo-actions"]}>
@@ -25,6 +31,7 @@ function TodoItem({ todo }) {
           className={styles["edit-button"]}
           src={editIconImage}
           alt="edit button"
+          onClick={() => addEditTodoFormToDisplay(todo.id)}
         />
         <img
           className={styles["delete-button"]}
@@ -50,12 +57,17 @@ function TodoItem({ todo }) {
         <div className={styles["todo-data"]} data-type="status">
           <div className={styles["todo-data-type"]}>Status:</div>
           <div className={styles["todo-data-value"]}>
-            {todo.data.isComplete !== true ? "Pending" : "Completed"}
+            {todo.data.isCompleted !== true ? "Pending" : "Completed"}
           </div>
         </div>
         <div>
-          <button className={styles["toggle-completed-status-button"]}>
-            {todo.data.isComplete !== true
+          <button
+            className={styles["toggle-completed-status-button"]}
+            onClick={() => {
+              toggleCompletedStatus(todo.id);
+            }}
+          >
+            {todo.data.isCompleted !== true
               ? "Mark as completed"
               : "Mark as pending"}
           </button>
@@ -78,6 +90,22 @@ function TodoDisplay({ parentProjectId }) {
     setFormData(FormDataFactory("add"));
   }
 
+  function addEditTodoFormToDisplay(id) {
+    setFormData(FormDataFactory("edit", todos[id]));
+  }
+
+  function toggleCompletedStatus(id) {
+    const todo = {
+      id: todos[id].id,
+      data: { ...todos[id].data, isCompleted: !todos[id].data.isCompleted },
+    };
+
+    publish(EDIT_TODO, {
+      user,
+      todo,
+    });
+  }
+
   return (
     <>
       {formData?.mode ? (
@@ -91,7 +119,14 @@ function TodoDisplay({ parentProjectId }) {
         <section className={styles["todos-section"]}>
           {Object.keys(todos).map((todoKey) => {
             const todo = todos[todoKey];
-            return <TodoItem todo={todo} key={todoKey} />;
+            return (
+              <TodoItem
+                todo={todo}
+                key={todoKey}
+                addEditTodoFormToDisplay={addEditTodoFormToDisplay}
+                toggleCompletedStatus={toggleCompletedStatus}
+              />
+            );
           })}
         </section>
       </section>

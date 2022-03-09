@@ -2,12 +2,12 @@ import formStyles from "../form-styles.module.css";
 import styles from "../TodoDisplay/styles.module.css";
 
 import Overlay from "../Overlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import dateFormat from "../../helper/date-formatter";
 import { publish } from "../../topic-manager";
 
-import { ADD_TODO } from "../../data/topics";
+import { ADD_TODO, EDIT_TODO } from "../../data/topics";
 import { useCurrentUser } from "../../auth/hooks";
 import { TodoFactory } from "../../data/data-factory";
 import { getDefaultProject } from "../../data/helper";
@@ -34,25 +34,51 @@ function TodoForm({ removeFormFromDisplay, mode, oldTodo, parentProjectId }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (mode === "add") {
-      let id = parentProjectId;
-      if (id === "all") {
-        id = await getDefaultProject(user);
-      }
-      publish(ADD_TODO, {
-        user,
-        todo: TodoFactory(
-          null,
-          id,
-          formData.title,
-          formData.description,
-          formData.deadline,
-          formData.priority
-        ),
-      });
-      removeFormFromDisplay();
+    let id = parentProjectId;
+    if (id === "all") {
+      id = await getDefaultProject(user);
     }
+
+    let topic = null;
+    let todo = null;
+    if (mode === "add") {
+      topic = ADD_TODO;
+      todo = TodoFactory(
+        null,
+        id,
+        formData.title,
+        formData.description,
+        formData.deadline,
+        formData.priority
+      );
+    } else if (mode === "edit") {
+      topic = EDIT_TODO;
+      const data = { id: oldTodo.id, ...oldTodo.data, ...formData };
+      todo = TodoFactory(
+        data.id,
+        data.parentProjectId,
+        data.title,
+        data.description,
+        data.deadline,
+        data.priority,
+        data.isCompleted
+      );
+    }
+    publish(topic, {
+      user,
+      todo,
+    });
+    removeFormFromDisplay();
   }
+
+  useEffect(() => {
+    setFormData({
+      title: oldTodo?.data?.title || "",
+      description: oldTodo?.data?.description || "",
+      deadline: oldTodo?.data?.deadline || dateFormat(new Date()),
+      priority: oldTodo?.data?.priority || "1",
+    });
+  }, [oldTodo]);
 
   return (
     <Overlay removeFormFromDisplay={removeFormFromDisplay}>

@@ -9,3 +9,6 @@ export const DELETE_PROJECT = "Delete project from database";
 
 export const ADD_TODO = "Add todo to database";
 // data: { user, todo }
+
+export const EDIT_TODO = "Edit todo in database";
+// data: { user, todo }

@@ -90,6 +90,14 @@
   background-color: #3bd6c4;
 }
 
+.todo-item.priority-1.completed,
+.todo-item.priority-2.completed,
+.todo-item.priority-3.completed,
+.todo-item.priority-4.completed {
+  background-color: #e3e3e3;
+  order: 5;
+}
+
 .priority-options .option {
   display: block;
   border-radius: 4px;
