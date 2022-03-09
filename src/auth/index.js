@@ -4,14 +4,12 @@ import {
   signInWithPopup,
   signOut,
   createUserWithEmailAndPassword,
-  signInAnonymously,
 } from "firebase/auth";
 import { auth } from "../firebase-config.js";
 import { publish, subscribe } from "../topic-manager";
 import {
   AUTH_LOGIN_ERROR,
   AUTH_SIGNUP_ERROR,
-  LOGIN_ANONYMOUSLY,
   LOGIN_WITH_EMAIL,
   LOGIN_WITH_GOOGLE,
   LOGOUT_USER,
@@ -46,15 +44,6 @@ async function handleGoogleLogin(topic) {
   }
 }
 subscribe(LOGIN_WITH_GOOGLE, handleGoogleLogin);
-
-async function handleAnonymousLogin() {
-  try {
-    await signInAnonymously(auth);
-  } catch (e) {
-    console.log(e);
-  }
-}
-subscribe(LOGIN_ANONYMOUSLY, handleAnonymousLogin);
 
 async function handleLogout(topic) {
   try {

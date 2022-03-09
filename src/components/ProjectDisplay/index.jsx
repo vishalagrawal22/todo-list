@@ -8,6 +8,7 @@ import ProjectForm from "../ProjectForm";
 import { useCallback, useState } from "react";
 import { useProjects } from "../../data/hooks";
 import { useCurrentUser } from "../../auth/hooks";
+import { loginAnonymously } from "../../auth/helper";
 
 function FormDataFactory(mode, oldProject = null) {
   return { mode, oldProject };
@@ -69,7 +70,10 @@ function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
     }
   }
 
-  function addNewProjectFormToDisplay() {
+  async function addNewProjectFormToDisplay() {
+    if (user === null) {
+      await loginAnonymously();
+    }
     setFormData(FormDataFactory("add"));
   }
 

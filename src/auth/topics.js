@@ -4,9 +4,6 @@ export const LOGIN_WITH_EMAIL = "Login with email and password";
 export const LOGIN_WITH_GOOGLE = "Login with google";
 // data: None
 
-export const LOGIN_ANONYMOUSLY = "Login anonymously";
-// data: None
-
 export const LOGOUT_USER = "Logout current user";
 // data: None
 

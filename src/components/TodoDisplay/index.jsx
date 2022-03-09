@@ -6,6 +6,7 @@ import addIconImage from "./images/add.svg";
 import styles from "./styles.module.css";
 
 import { useCurrentUser } from "../../auth/hooks";
+import { loginAnonymously } from "../../auth/helper";
 import { useTodos } from "../../data/hooks";
 import TodoForm from "../TodoForm";
 import { publish } from "../../topic-manager";
@@ -103,7 +104,10 @@ function TodoDisplay({ parentProjectId }) {
     setFormData({});
   }
 
-  function addNewTodoFormToDisplay() {
+  async function addNewTodoFormToDisplay() {
+    if (user === null) {
+      await loginAnonymously();
+    }
     setFormData(FormDataFactory("add"));
   }
 
