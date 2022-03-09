@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import "./App.css";
 import { useCurrentUser } from "./auth/hooks";
+import Footer from "./components/Footer";
 
 function App() {
   const user = useCurrentUser();
@@ -25,6 +26,7 @@ function App() {
         />
         <TodoDisplay parentProjectId={selectedProjectId} />
       </main>
+      <Footer />
     </>
   );
 }
