@@ -10,6 +10,7 @@ import { useTodos } from "../../data/hooks";
 import TodoForm from "../TodoForm";
 import { publish } from "../../topic-manager";
 import { DELETE_TODO, EDIT_TODO } from "../../data/topics";
+import { formatDate, isExpired, getTimeLeft } from "../../helpers/date";
 
 function FormDataFactory(mode, oldTodo = null) {
   return { mode, oldTodo };
@@ -21,6 +22,16 @@ function TodoItem({
   toggleCompletedStatus,
   deleteTodo,
 }) {
+  let timeLeft;
+  const formattedDeadline = formatDate(todo.data.deadline);
+  if (todo.data.isCompleted) {
+    timeLeft = `Task is completed (${formattedDeadline})`;
+  } else if (isExpired(todo.data.deadline)) {
+    timeLeft = `Past due date (${formattedDeadline})`;
+  } else {
+    timeLeft = `${getTimeLeft(todo.data.deadline)} (${formattedDeadline})`;
+  }
+
   return (
     <article
       className={
@@ -52,7 +63,7 @@ function TodoItem({
         </div>
         <div className={styles["todo-data"]} data-type="time-left">
           <div className={styles["todo-data-type"]}>Time Left:</div>
-          <div className={styles["todo-data-value"]}>{todo.data.deadline}</div>
+          <div className={styles["todo-data-value"]}>{timeLeft}</div>
         </div>
         <div className={styles["todo-data"]} data-type="description">
           <div className={styles["todo-data-type"]}>Description:</div>

@@ -4,7 +4,7 @@ import styles from "../TodoDisplay/styles.module.css";
 import Overlay from "../Overlay";
 import { useEffect, useState } from "react";
 
-import dateFormat from "../../helper/date-formatter";
+import { formatDateForDatePicker } from "../../helpers/date";
 import { publish } from "../../topic-manager";
 
 import { ADD_TODO, EDIT_TODO } from "../../data/topics";
@@ -17,7 +17,7 @@ function TodoForm({ removeFormFromDisplay, mode, oldTodo, parentProjectId }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    deadline: dateFormat(new Date()),
+    deadline: formatDateForDatePicker(new Date()),
     priority: "1",
   });
 
@@ -75,7 +75,7 @@ function TodoForm({ removeFormFromDisplay, mode, oldTodo, parentProjectId }) {
     setFormData({
       title: oldTodo?.data?.title || "",
       description: oldTodo?.data?.description || "",
-      deadline: oldTodo?.data?.deadline || dateFormat(new Date()),
+      deadline: oldTodo?.data?.deadline || formatDateForDatePicker(new Date()),
       priority: oldTodo?.data?.priority || "1",
     });
   }, [oldTodo]);
