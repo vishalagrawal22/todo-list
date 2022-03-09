@@ -13,6 +13,51 @@ function FormDataFactory(mode, oldProject = null) {
   return { mode, oldProject };
 }
 
+function ProjectItem({
+  project,
+  addEditProjectFormToDisplay,
+  deleteProject,
+  selectedProjectId,
+  setSelectedProjectId,
+}) {
+  return (
+    <li className={styles["project-item"]}>
+      <article>
+        <h3
+          className={styles["project-name"]}
+          onClick={() => {
+            setSelectedProjectId(project.id);
+          }}
+        >
+          <span
+            className={
+              selectedProjectId === project.id ? styles["selected"] : ""
+            }
+          >
+            {project.data.name}
+          </span>
+        </h3>
+        <div className={styles["project-actions"]}>
+          <img
+            src={editIconImage}
+            alt="edit-button"
+            onClick={() => {
+              addEditProjectFormToDisplay(project.id);
+            }}
+          />
+          <img
+            src={deleteIconImage}
+            alt="delete-button"
+            onClick={() => {
+              deleteProject(project.id);
+            }}
+          />
+        </div>
+      </article>
+    </li>
+  );
+}
+
 function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
   const [formData, setFormData] = useState({});
   const user = useCurrentUser();
@@ -76,42 +121,17 @@ function ProjectDisplay({ selectedProjectId, setSelectedProjectId }) {
               </h3>
             </article>
           </li>
-          {Object.keys(projects).map((id) => {
+          {Object.keys(projects).map((projectKey) => {
+            const project = projects[projectKey];
             return (
-              <li key={id} className={styles["project-item"]}>
-                <article>
-                  <h3
-                    className={styles["project-name"]}
-                    onClick={() => {
-                      setSelectedProjectId(id);
-                    }}
-                  >
-                    <span
-                      className={
-                        selectedProjectId === id ? styles["selected"] : ""
-                      }
-                    >
-                      {projects[id].data.name}
-                    </span>
-                  </h3>
-                  <div className={styles["project-actions"]}>
-                    <img
-                      src={editIconImage}
-                      alt="edit-button"
-                      onClick={() => {
-                        addEditProjectFormToDisplay(id);
-                      }}
-                    />
-                    <img
-                      src={deleteIconImage}
-                      alt="delete-button"
-                      onClick={() => {
-                        deleteProject(id);
-                      }}
-                    />
-                  </div>
-                </article>
-              </li>
+              <ProjectItem
+                key={projectKey}
+                project={project}
+                addEditProjectFormToDisplay={addEditProjectFormToDisplay}
+                deleteProject={deleteProject}
+                selectedProjectId={selectedProjectId}
+                setSelectedProjectId={setSelectedProjectId}
+              />
             );
           })}
         </ul>

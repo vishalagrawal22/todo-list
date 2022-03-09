@@ -13,6 +13,58 @@ function FormDataFactory(mode, oldTodo = null) {
   return { mode, oldTodo };
 }
 
+function TodoItem({ todo }) {
+  return (
+    <article
+      className={
+        styles["todo-item"] + " " + styles[`priority-${todo.data.priority}`]
+      }
+    >
+      <div className={styles["todo-actions"]}>
+        <img
+          className={styles["edit-button"]}
+          src={editIconImage}
+          alt="edit button"
+        />
+        <img
+          className={styles["delete-button"]}
+          src={deleteIconImage}
+          alt="delete button"
+        />
+      </div>
+      <div className={styles["todo-info"]}>
+        <div className={styles["todo-data"]} data-type="title">
+          <div className={styles["todo-data-type"]}>Title:</div>
+          <div className={styles["todo-data-value"]}>{todo.data.title}</div>
+        </div>
+        <div className={styles["todo-data"]} data-type="time-left">
+          <div className={styles["todo-data-type"]}>Time Left:</div>
+          <div className={styles["todo-data-value"]}>{todo.data.deadline}</div>
+        </div>
+        <div className={styles["todo-data"]} data-type="description">
+          <div className={styles["todo-data-type"]}>Description:</div>
+          <div className={styles["todo-data-value"]}>
+            {todo.data.description}
+          </div>
+        </div>
+        <div className={styles["todo-data"]} data-type="status">
+          <div className={styles["todo-data-type"]}>Status:</div>
+          <div className={styles["todo-data-value"]}>
+            {todo.data.isComplete !== true ? "Pending" : "Completed"}
+          </div>
+        </div>
+        <div>
+          <button className={styles["toggle-completed-status-button"]}>
+            {todo.data.isComplete !== true
+              ? "Mark as completed"
+              : "Mark as pending"}
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function TodoDisplay({ parentProjectId }) {
   const user = useCurrentUser();
   const todos = useTodos(user, parentProjectId === "all", parentProjectId);
@@ -39,64 +91,7 @@ function TodoDisplay({ parentProjectId }) {
         <section className={styles["todos-section"]}>
           {Object.keys(todos).map((todoKey) => {
             const todo = todos[todoKey];
-            return (
-              <article
-                className={
-                  styles["todo-item"] +
-                  " " +
-                  styles[`priority-${todo.data.priority}`]
-                }
-                key={todoKey}
-              >
-                <div className={styles["todo-actions"]}>
-                  <img
-                    className={styles["edit-button"]}
-                    src={editIconImage}
-                    alt="edit button"
-                  />
-                  <img
-                    className={styles["delete-button"]}
-                    src={deleteIconImage}
-                    alt="delete button"
-                  />
-                </div>
-                <div className={styles["todo-info"]}>
-                  <div className={styles["todo-data"]} data-type="title">
-                    <div className={styles["todo-data-type"]}>Title:</div>
-                    <div className={styles["todo-data-value"]}>
-                      {todo.data.title}
-                    </div>
-                  </div>
-                  <div className={styles["todo-data"]} data-type="time-left">
-                    <div className={styles["todo-data-type"]}>Time Left:</div>
-                    <div className={styles["todo-data-value"]}>
-                      {todo.data.deadline}
-                    </div>
-                  </div>
-                  <div className={styles["todo-data"]} data-type="description">
-                    <div className={styles["todo-data-type"]}>Description:</div>
-                    <div className={styles["todo-data-value"]}>
-                      {todo.data.description}
-                    </div>
-                  </div>
-                  <div className={styles["todo-data"]} data-type="status">
-                    <div className={styles["todo-data-type"]}>Status:</div>
-                    <div className={styles["todo-data-value"]}>
-                      {todo.data.isComplete !== true ? "Pending" : "Completed"}
-                    </div>
-                  </div>
-                  <div>
-                    <button
-                      className={styles["toggle-completed-status-button"]}
-                    >
-                      {todo.data.isComplete !== true
-                        ? "Mark as completed"
-                        : "Mark as pending"}
-                    </button>
-                  </div>
-                </div>
-              </article>
-            );
+            return <TodoItem todo={todo} key={todoKey} />;
           })}
         </section>
       </section>
